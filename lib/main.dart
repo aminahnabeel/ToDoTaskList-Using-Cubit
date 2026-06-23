@@ -14,11 +14,11 @@ class TodoModel{
     required this.title,
     this.isCompleted  = false,
   });
-  TodoModel copyWith({bool? isCompleted, String? id, String? title}){
+  TodoModel copyWith({bool? isCompleted, String? id, String? title}){    //nullable used to show that it can contain null values. 
     return TodoModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      isCompleted: isCompleted ?? this.isCompleted,
+      id: id ?? this.id, //if id is null then use the existing id
+      title: title ?? this.title,  //if title is null then use the existing title
+      isCompleted: isCompleted ?? this.isCompleted, //if isCompleted is null then use the existing isCompleted
     );
   }
 }
@@ -28,17 +28,17 @@ class TodoState{
   TodoState(this.todos);
 }
 //cubit class for managing todo state and actions
-class TodoCubit extends Cubit<TodoState>{
-  TodoCubit(): super(TodoState([]));
+class TodoCubit extends Cubit<TodoState>{ //Cubit is a state management class that extends the Cubit class from the flutter_bloc package. It manages the state of the todo list and provides methods to add and toggle todos.
+  TodoCubit(): super(TodoState([])); //whenever the cubit is created, it initializes the state with an empty list of todos.
   void addTodo(String title){
-    if(title.isEmpty) return;
+    if(title.isEmpty) return; //if the title is empty, function returns without adding a new todo.
     debugPrint("-----------------------------------");
     debugPrint("Cubit: Adding todo with title: $title");
-    final newTodo = TodoModel(id: DateTime.now().toString(), title: title);
+    final newTodo = TodoModel(id: DateTime.now().toString(), title: title); //creates a new instance of the TodoModel class with a unique id based on the current timestamp and the provided title.
     final updatedList = List<TodoModel>.from(state.todos)..add(newTodo);
     debugPrint("Cubit: Total task count after adding: ${updatedList.length}");
     debugPrint("-----------------------------------");
-    emit(TodoState(updatedList));
+    emit(TodoState(updatedList)); //emits a new state with the updated list of todos, which triggers a rebuild of the UI to reflect the changes.
   }
   void toggleTodoStatus(String id){
     debugPrint("-----------------------------------");
@@ -52,23 +52,23 @@ class TodoCubit extends Cubit<TodoState>{
       return todo;
     }).toList();
     debugPrint("------------------------------------");
-    emit(TodoState(updatedList));
+    emit(TodoState(updatedList)); 
   }
 }
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key}); //
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {  //build method is called when the widget is inserted into the widget tree. It describes the part of the user interface represented by this widget.
     return MaterialApp(
-      home: BlocProvider(
-        create: (_) => TodoCubit(),
-        child: const TodoScreen(),
+      home: BlocProvider( //BlocProvider is a widget that provides an instance of a Bloc or Cubit to its descendants in the widget tree. It allows widgets to access and interact with the state managed by the provided Bloc or Cubit.
+        create: (_) => TodoCubit(),   //
+        child: const TodoScreen(),  //The child property of BlocProvider is set to an instance of TodoScreen, which is the main screen of the app where users can add and view their todo tasks. By wrapping TodoScreen with BlocProvider, we ensure that it has access to the TodoCubit and can interact with the state it manages.
       ),
     );
   }
 }
-class TodoScreen extends StatelessWidget {
+class TodoScreen extends StatelessWidget { 
   const TodoScreen({super.key});
 
   @override
